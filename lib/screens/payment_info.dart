@@ -62,7 +62,7 @@ class _PaymentInfoScreenState extends State<PaymentInfoScreen> {
           context: context,
           builder: (context) => AlertDialog(
             title: const Text('An Error Occur'),
-            content: Text('Something went wrong!!'),
+            content: const Text('Something went wrong!!'),
             actions: [
               TextButton(
                 onPressed: () {
@@ -193,7 +193,7 @@ class _PaymentInfoScreenState extends State<PaymentInfoScreen> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Text("Expiry Date"),
+                                      const Text("Expiry Date"),
                                       Row(
                                         children: [
                                           Flexible(
@@ -304,8 +304,11 @@ class _PaymentInfoScreenState extends State<PaymentInfoScreen> {
                         color: primaryColor,
                       ),
                       child: _isloading
-                          ? Center(
-                              child: CircularProgressIndicator(),
+                          ? const Center(
+                              child: SizedBox(
+                                  height: 20,
+                                  width: 20,
+                                  child: CircularProgressIndicator()),
                             )
                           : Text(
                               'Confirm',

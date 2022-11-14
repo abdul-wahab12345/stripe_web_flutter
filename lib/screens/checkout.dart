@@ -24,17 +24,18 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
   void _submitData() async {
     final isValid = _formkey.currentState!.validate();
-    setState(() {
-      _isloading = true;
-    });
+
     if (isValid) {
+      setState(() {
+        _isloading = true;
+      });
       var cardid = Provider.of<Payment>(context, listen: false)
           .tempCard['id']
           .toString();
       if (cardid.isEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Added Payment Method First'),
+            content: const Text('Added Payment Method First'),
             backgroundColor: Theme.of(context).errorColor,
           ),
         );
@@ -57,7 +58,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                 });
                 print(123);
                 AwesomeDialog(
-                  width: MediaQuery.of(context).size.width * 0.2,
+                  width: MediaQuery.of(context).size.width * 0.3,
                   padding: EdgeInsets.zero,
                   context: context,
                   showCloseIcon: false,
@@ -67,7 +68,12 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                       const Duration(milliseconds: 400),
                   title: 'Success',
                   desc: 'Your subscription has been purchased',
-                  btnOkOnPress: () {},
+                  btnOkOnPress: () {
+                    _nameController.clear();
+                    _cityController.clear();
+                    _countryController.clear();
+                    _noController.clear();
+                  },
                 ).show();
               });
             }
@@ -295,7 +301,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                             Navigator.of(context).pushNamed(
                                                 PaymentInfoScreen.routeName);
                                           },
-                                          child: Text('Add Payment Method'))
+                                          child:
+                                              const Text('Add Payment Method'))
                                     ],
                                   ),
                                   SizedBox(
@@ -309,8 +316,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                           vertical: 0, horizontal: 10),
                                       width: double.infinity,
                                       decoration: BoxDecoration(
-                                        color:
-                                            Color.fromRGBO(217, 217, 217, 0.2),
+                                        color: const Color.fromRGBO(
+                                            217, 217, 217, 0.2),
                                         borderRadius: BorderRadius.circular(10),
                                       ),
                                       child: Column(
@@ -319,7 +326,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                           children: [
                                             Row(
                                               children: [
-                                                Text(
+                                                const Text(
                                                   'CardHolder Name : ',
                                                   style: TextStyle(
                                                       fontSize: 10,
@@ -331,7 +338,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                             ),
                                             Row(
                                               children: [
-                                                Text(
+                                                const Text(
                                                   'Card Number : ',
                                                   style: TextStyle(
                                                       fontSize: 10,
@@ -344,7 +351,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                             ),
                                             Row(
                                               children: [
-                                                Text(
+                                                const Text(
                                                   'Card Brand : ',
                                                   style: TextStyle(
                                                       fontSize: 10,
@@ -356,7 +363,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                             ),
                                             Row(
                                               children: [
-                                                Text(
+                                                const Text(
                                                   'Epiry Date : ',
                                                   style: TextStyle(
                                                       fontSize: 10,
@@ -388,8 +395,11 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                               color: primaryColor,
                             ),
                             child: _isloading
-                                ? Center(
-                                    child: CircularProgressIndicator(),
+                                ? const Center(
+                                    child: SizedBox(
+                                        height: 20,
+                                        width: 20,
+                                        child: CircularProgressIndicator()),
                                   )
                                 : Text(
                                     'Confirm',
@@ -426,7 +436,7 @@ class ProductDetail extends StatelessWidget {
             title,
             style: HeadStyle.copyWith(fontSize: 14),
           ),
-          SizedBox(
+          const SizedBox(
             width: 20,
           ),
           Text(value),

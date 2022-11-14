@@ -1,3 +1,4 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:checkout/screens/payment_info.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -18,7 +19,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   final _countryController = TextEditingController();
   final _noController = TextEditingController();
   bool _isloading = false;
-  String productkey = 'prod_Mmmt7h4FLlrrB5';
+
   final _formkey = GlobalKey<FormState>();
 
   void _submitData() async {
@@ -51,8 +52,17 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
           payment.addSubscription(prodkey: productkey).then((value) async {
             if (Provider.of<Payment>(context, listen: false).tempSubs != null) {
               await payment.uploaddata();
-              ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Subscription Created')));
+              // print(123);
+              // AwesomeDialog(
+              //   padding: EdgeInsets.zero,
+              //   context: context,
+              //   showCloseIcon: false,
+              //   dialogType: DialogType.success,
+              //   headerAnimationLoop: false,
+              //   transitionAnimationDuration: const Duration(milliseconds: 400),
+              //   title: 'Sufyan',
+              //   desc: 'Your subscription has been purchased',
+              // ).show();
             }
           });
         } catch (error) {
@@ -79,234 +89,343 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     });
   }
 
+  bool isLoading = false;
+
+  @override
+  void initState() {
+    setState(() {
+      isLoading = true;
+    }); // TODO: implement initState
+    Provider.of<Payment>(context, listen: false)
+        .fetchProduct(productId: productkey)
+        .then((value) {
+      setState(() {
+        isLoading = false;
+      });
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     final card = Provider.of<Payment>(context, listen: true).tempCard;
     final Height = MediaQuery.of(context).size.height / 100;
+    var product = Provider.of<Payment>(context, listen: true).product;
     return Scaffold(
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-            child: Form(
-              key: _formkey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  InkWell(
-                      onTap: () {},
-                      child: Text(
-                        'Back',
-                        style: HeadStyle.copyWith(fontSize: 12),
-                      )),
-                  SizedBox(
-                    height: Height * 1,
-                  ),
-                  Center(
-                      child: Text(
-                    'Checkout',
-                    style: HeadStyle,
-                  )),
-                  SizedBox(
-                    height: Height * 3,
-                  ),
-                  Card(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 20, horizontal: 10),
-                      child: Column(
-                        children: [
-                          Center(
+      body: product == null
+          ? Center(
+              child: CircularProgressIndicator(color: primaryColor),
+            )
+          : SafeArea(
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  child: Form(
+                    key: _formkey,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        InkWell(
+                            onTap: () {},
                             child: Text(
-                              'Personal Info',
-                              style: HeadStyle.copyWith(fontSize: 16),
-                            ),
-                          ),
-                          SizedBox(
-                            height: Height * 1,
-                          ),
-                          TextFormField(
-                            controller: _nameController,
-                            validator: (value) {
-                              if (value.toString().isEmpty) {
-                                return '*required';
-                              }
-                              return null;
-                            },
-                            decoration: const InputDecoration(
-                              contentPadding: EdgeInsets.symmetric(
-                                  vertical: 12.5, horizontal: 10.0),
-                              labelText: "Name",
-                            ),
-                          ),
-                          SizedBox(
-                            height: Height * 1,
-                          ),
-                          TextFormField(
-                            controller: _noController,
-                            maxLength: 11,
-                            keyboardType: TextInputType.phone,
-                            validator: (value) {
-                              if (value.toString().isEmpty) {
-                                return '*required';
-                              }
-                              return null;
-                            },
-                            decoration: const InputDecoration(
-                              contentPadding: EdgeInsets.symmetric(
-                                  vertical: 12.5, horizontal: 10.0),
-                              labelText: 'Phone Number',
-                            ),
-                          ),
-                          SizedBox(
-                            height: Height * 1,
-                          ),
-                          TextFormField(
-                            controller: _cityController,
-                            validator: (value) {
-                              if (value.toString().isEmpty) {
-                                return '*required';
-                              }
-                              return null;
-                            },
-                            decoration: const InputDecoration(
-                                contentPadding: EdgeInsets.symmetric(
-                                    vertical: 12.5, horizontal: 10.0),
-                                labelText: 'City'),
-                          ),
-                          SizedBox(
-                            height: Height * 1,
-                          ),
-                          SizedBox(
-                            height: Height * 1,
-                          ),
-                          TextFormField(
-                            controller: _countryController,
-                            validator: (value) {
-                              if (value.toString().isEmpty) {
-                                return '*required';
-                              }
-                              return null;
-                            },
-                            decoration: const InputDecoration(
-                                contentPadding: EdgeInsets.symmetric(
-                                    vertical: 12.5, horizontal: 10.0),
-                                labelText: 'Country'),
-                          ),
-                          SizedBox(
-                            height: Height * 1,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                'Payment Info',
-                                style: HeadStyle.copyWith(fontSize: 16),
+                              'Back',
+                              style: HeadStyle.copyWith(fontSize: 12),
+                            )),
+                        SizedBox(
+                          height: Height * 1,
+                        ),
+                        Center(
+                            child: Text(
+                          'Checkout',
+                          style: HeadStyle,
+                        )),
+                        SizedBox(
+                          height: Height * 3,
+                        ),
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.5,
+                          child: Card(
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 20, horizontal: 10),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Center(
+                                        child: Text(
+                                          'Product Info',
+                                          style:
+                                              HeadStyle.copyWith(fontSize: 16),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: Height * 1,
+                                      ),
+                                      ProductDetail(
+                                        value: product.name,
+                                        title: 'Product Name:',
+                                      ),
+                                      ProductDetail(
+                                        value: product.desc,
+                                        title: 'Product Description:',
+                                      ),
+                                      ProductDetail(
+                                        value: '\$100',
+                                        title: 'Product Price:',
+                                      ),
+                                    ],
+                                  ),
+                                  if (product.images!.isNotEmpty)
+                                    Container(
+                                      child:
+                                          Image.network(product.images!.first),
+                                    ),
+                                ],
                               ),
-                              TextButton(
-                                  onPressed: () {
-                                    Navigator.of(context)
-                                        .pushNamed(PaymentInfoScreen.routeName);
-                                  },
-                                  child: Text('Add Payment Method'))
-                            ],
+                            ),
                           ),
-                          SizedBox(
-                            height: Height * 1,
-                          ),
-                          if (card['id'].toString().isNotEmpty)
-                            Container(
-                              alignment: Alignment.centerLeft,
-                              padding: const EdgeInsets.all(10),
-                              margin: const EdgeInsets.symmetric(
-                                  vertical: 0, horizontal: 10),
-                              width: double.infinity,
-                              decoration: BoxDecoration(
-                                color: Color.fromRGBO(217, 217, 217, 0.2),
-                                borderRadius: BorderRadius.circular(10),
-                              ),
+                        ),
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.5,
+                          child: Card(
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 30, horizontal: 20),
                               child: Column(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Text(
-                                          'CardHolder Name : ',
-                                          style: TextStyle(
-                                              fontSize: 10,
-                                              fontWeight: FontWeight.w600),
-                                        ),
-                                        Text(card['name'])
-                                      ],
+                                children: [
+                                  Center(
+                                    child: Text(
+                                      'Personal Info',
+                                      style: HeadStyle.copyWith(fontSize: 16),
                                     ),
-                                    Row(
-                                      children: [
-                                        Text(
-                                          'Card Number : ',
-                                          style: TextStyle(
-                                              fontSize: 10,
-                                              fontWeight: FontWeight.w600),
-                                        ),
-                                        Text('************${card['last4']}')
-                                      ],
+                                  ),
+                                  SizedBox(
+                                    height: Height * 1,
+                                  ),
+                                  TextFormField(
+                                    controller: _nameController,
+                                    validator: (value) {
+                                      if (value.toString().isEmpty) {
+                                        return '*required';
+                                      }
+                                      return null;
+                                    },
+                                    decoration: const InputDecoration(
+                                      contentPadding: EdgeInsets.symmetric(
+                                          vertical: 12.5, horizontal: 10.0),
+                                      labelText: "Name",
                                     ),
-                                    Row(
-                                      children: [
-                                        Text(
-                                          'Card Brand : ',
-                                          style: TextStyle(
-                                              fontSize: 10,
-                                              fontWeight: FontWeight.w600),
-                                        ),
-                                        Text(card['brand'])
-                                      ],
+                                  ),
+                                  SizedBox(
+                                    height: Height * 1,
+                                  ),
+                                  TextFormField(
+                                    controller: _noController,
+                                    maxLength: 11,
+                                    keyboardType: TextInputType.phone,
+                                    validator: (value) {
+                                      if (value.toString().isEmpty) {
+                                        return '*required';
+                                      }
+                                      return null;
+                                    },
+                                    decoration: const InputDecoration(
+                                      contentPadding: EdgeInsets.symmetric(
+                                          vertical: 12.5, horizontal: 10.0),
+                                      labelText: 'Phone Number',
                                     ),
-                                    Row(
-                                      children: [
-                                        Text(
-                                          'Epiry Date : ',
-                                          style: TextStyle(
-                                              fontSize: 10,
-                                              fontWeight: FontWeight.w600),
-                                        ),
-                                        Text(
-                                            '${card['exmonth']}/${card['exyear']}')
-                                      ],
-                                    ),
-                                  ]),
-                            )
-                        ],
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    height: Height * 3,
-                  ),
-                  InkWell(
-                    onTap: _isloading ? null : _submitData,
-                    child: Container(
-                      alignment: Alignment.center,
-                      height: 48,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: primaryColor,
-                      ),
-                      child: _isloading
-                          ? Center(
-                              child: CircularProgressIndicator(),
-                            )
-                          : Text(
-                              'Confirm',
-                              style: HeadStyle.copyWith(fontSize: 16),
+                                  ),
+                                  SizedBox(
+                                    height: Height * 1,
+                                  ),
+                                  TextFormField(
+                                    controller: _cityController,
+                                    validator: (value) {
+                                      if (value.toString().isEmpty) {
+                                        return '*required';
+                                      }
+                                      return null;
+                                    },
+                                    decoration: const InputDecoration(
+                                        contentPadding: EdgeInsets.symmetric(
+                                            vertical: 12.5, horizontal: 10.0),
+                                        labelText: 'City'),
+                                  ),
+                                  SizedBox(
+                                    height: Height * 1,
+                                  ),
+                                  SizedBox(
+                                    height: Height * 1,
+                                  ),
+                                  TextFormField(
+                                    controller: _countryController,
+                                    validator: (value) {
+                                      if (value.toString().isEmpty) {
+                                        return '*required';
+                                      }
+                                      return null;
+                                    },
+                                    decoration: const InputDecoration(
+                                        contentPadding: EdgeInsets.symmetric(
+                                            vertical: 12.5, horizontal: 10.0),
+                                        labelText: 'Country'),
+                                  ),
+                                  SizedBox(
+                                    height: Height * 1,
+                                  ),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        'Payment Info',
+                                        style: HeadStyle.copyWith(fontSize: 16),
+                                      ),
+                                      TextButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pushNamed(
+                                                PaymentInfoScreen.routeName);
+                                          },
+                                          child: Text('Add Payment Method'))
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: Height * 1,
+                                  ),
+                                  if (card['id'].toString().isNotEmpty)
+                                    Container(
+                                      alignment: Alignment.centerLeft,
+                                      padding: const EdgeInsets.all(10),
+                                      margin: const EdgeInsets.symmetric(
+                                          vertical: 0, horizontal: 10),
+                                      width: double.infinity,
+                                      decoration: BoxDecoration(
+                                        color:
+                                            Color.fromRGBO(217, 217, 217, 0.2),
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Row(
+                                              children: [
+                                                Text(
+                                                  'CardHolder Name : ',
+                                                  style: TextStyle(
+                                                      fontSize: 10,
+                                                      fontWeight:
+                                                          FontWeight.w600),
+                                                ),
+                                                Text(card['name'])
+                                              ],
+                                            ),
+                                            Row(
+                                              children: [
+                                                Text(
+                                                  'Card Number : ',
+                                                  style: TextStyle(
+                                                      fontSize: 10,
+                                                      fontWeight:
+                                                          FontWeight.w600),
+                                                ),
+                                                Text(
+                                                    '************${card['last4']}')
+                                              ],
+                                            ),
+                                            Row(
+                                              children: [
+                                                Text(
+                                                  'Card Brand : ',
+                                                  style: TextStyle(
+                                                      fontSize: 10,
+                                                      fontWeight:
+                                                          FontWeight.w600),
+                                                ),
+                                                Text(card['brand'])
+                                              ],
+                                            ),
+                                            Row(
+                                              children: [
+                                                Text(
+                                                  'Epiry Date : ',
+                                                  style: TextStyle(
+                                                      fontSize: 10,
+                                                      fontWeight:
+                                                          FontWeight.w600),
+                                                ),
+                                                Text(
+                                                    '${card['exmonth']}/${card['exyear']}')
+                                              ],
+                                            ),
+                                          ]),
+                                    )
+                                ],
+                              ),
                             ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: Height * 3,
+                        ),
+                        InkWell(
+                          onTap: _isloading ? null : _submitData,
+                          child: Container(
+                            width: MediaQuery.of(context).size.width * 0.5,
+                            alignment: Alignment.center,
+                            height: 48,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: primaryColor,
+                            ),
+                            child: _isloading
+                                ? Center(
+                                    child: CircularProgressIndicator(),
+                                  )
+                                : Text(
+                                    'Confirm',
+                                    style: HeadStyle.copyWith(fontSize: 16),
+                                  ),
+                          ),
+                        )
+                      ],
                     ),
-                  )
-                ],
+                  ),
+                ),
               ),
             ),
+    );
+  }
+}
+
+class ProductDetail extends StatelessWidget {
+  ProductDetail({Key? key, required this.value, required this.title})
+      : super(key: key);
+
+  final String value;
+  String title;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 5),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: HeadStyle.copyWith(fontSize: 14),
           ),
-        ),
+          SizedBox(
+            width: 20,
+          ),
+          Text(value),
+        ],
       ),
     );
   }

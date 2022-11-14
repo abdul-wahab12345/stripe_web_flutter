@@ -25,6 +25,21 @@ class CardInfo {
       required this.cvv});
 }
 
+class Product {
+  String id;
+  String name;
+  String desc;
+  String price;
+  List<String>? images;
+  Product({
+    required this.id,
+    required this.name,
+    required this.desc,
+    required this.price,
+    this.images,
+  });
+}
+
 class Customer {
   final String id;
   final String name;
@@ -50,6 +65,35 @@ class Payment with ChangeNotifier {
     'last4': '',
     'brand': '',
   };
+
+  Product? product;
+
+  //--------------------get product-----------------
+  Future<void> fetchProduct({required String productId}) async {
+    final url = Uri.parse('${baseUrl}products/$productId');
+    final response =
+        await http.get(url, headers: {'Authorization': 'Bearer $skApi'});
+    print(response.body);
+    final prod = json.decode(response.body);
+    List<String> imgData = [];
+    if (prod['images'] != null) {
+      var imgs = prod['images'] as List<dynamic>;
+      imgs.forEach((element) {
+        imgData.add(element);
+      });
+    }
+    Product fetchedProduct = Product(
+      id: prod['id'],
+      name: prod['name'],
+      desc: prod['description'] ?? '',
+      price: prod['default_price'] ?? '',
+      images: imgData,
+    );
+
+    product = fetchedProduct;
+    notifyListeners();
+  }
+
   Future<void> addPaymentMethod(CardInfo card) async {
     var url = Uri.parse('${baseUrl}payment_methods');
     try {
@@ -63,10 +107,10 @@ class Payment with ChangeNotifier {
         'card[cvc]': card.cvv
       });
       // print(response.body);
-      final extractedData = json.decode(response.body) as Map<String,dynamic>;
+      final extractedData = json.decode(response.body) as Map<String, dynamic>;
 
       if (extractedData.containsKey('error')) {
-        print(extractedData['error']['message']); 
+        print(extractedData['error']['message']);
         throw HttpException(extractedData['error']['message']);
       } else {
         tempCard = {
@@ -84,7 +128,7 @@ class Payment with ChangeNotifier {
     } catch (error) {
       rethrow;
     }
-   // print(tempCard);
+    // print(tempCard);
   }
 
   var tempCustomer =
@@ -169,17 +213,17 @@ class Payment with ChangeNotifier {
       'expiryMonth': tempCard['exmonth'],
       'expiryYear': tempCard['exyear'],
     });
-    if(tempSubs != null ){
-    await FirebaseFirestore.instance.collection('Subscriptions').add({
-      'id': tempSubs!['id'],
-      'curreny': tempSubs!['curreny'],
-      'product': tempSubs!['product'],
-      'eecurringInterval': tempSubs!['recurringinterval'],
-      'intervalCount': tempSubs!['interval_count'],
-      'unitAmountDecimal': tempSubs!['unit_amount_decimal'],
-      'customer': tempSubs!['customer'],
-      'defaultPaymentMethod': tempSubs!['default_payment_method'],
-    });
+    if (tempSubs != null) {
+      await FirebaseFirestore.instance.collection('Subscriptions').add({
+        'id': tempSubs!['id'],
+        'curreny': tempSubs!['curreny'],
+        'product': tempSubs!['product'],
+        'eecurringInterval': tempSubs!['recurringinterval'],
+        'intervalCount': tempSubs!['interval_count'],
+        'unitAmountDecimal': tempSubs!['unit_amount_decimal'],
+        'customer': tempSubs!['customer'],
+        'defaultPaymentMethod': tempSubs!['default_payment_method'],
+      });
     }
   }
 }

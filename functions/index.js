@@ -30,7 +30,7 @@ exports.webhook = functions.https.onRequest((request, response) => {
       response.send(data.status);
       break;
     }
-    //handle subscription update
+    // handle subscription update
     case "customer.subscription.updated": {
       const data =event.data.object;
       console.log(data.amount);

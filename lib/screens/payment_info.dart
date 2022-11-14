@@ -40,7 +40,7 @@ class _PaymentInfoScreenState extends State<PaymentInfoScreen> {
       try {
         await Provider.of<Payment>(context, listen: false)
             .addPaymentMethod(temp);
-          Navigator.of(context).pop();
+        Navigator.of(context).pop();
       } on HttpException catch (error) {
         await showDialog<void>(
           context: context,
@@ -94,7 +94,7 @@ class _PaymentInfoScreenState extends State<PaymentInfoScreen> {
             child: Form(
               key: _formkey,
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   InkWell(
@@ -117,168 +117,176 @@ class _PaymentInfoScreenState extends State<PaymentInfoScreen> {
                   SizedBox(
                     height: Height * 10,
                   ),
-                  Card(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 25, horizontal: 15),
-                      child: Column(
-                        children: [
-                          Center(
-                            child: Text(
-                              'Payment Details',
-                              style: HeadStyle.copyWith(fontSize: 16),
-                            ),
-                          ),
-                          SizedBox(
-                            height: Height * 1,
-                          ),
-                          TextFormField(
-                            controller: _nameController,
-                            validator: (value) {
-                              if (value.toString().isEmpty) {
-                                return '*required';
-                              }
-                              return null;
-                            },
-                            decoration: const InputDecoration(
-                              contentPadding: EdgeInsets.symmetric(
-                                  vertical: 12.5, horizontal: 10.0),
-                              labelText: 'Name',
-                              hintText: 'Enter name mention on the card',
-                              hintStyle: TextStyle(
-                                color: Color.fromRGBO(20, 14, 37, 0.6),
-                                fontSize: 12,
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.5,
+                    child: Card(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 25, horizontal: 15),
+                        child: Column(
+                          children: [
+                            Center(
+                              child: Text(
+                                'Payment Details',
+                                style: HeadStyle.copyWith(fontSize: 16),
                               ),
                             ),
-                          ),
-                          SizedBox(
-                            height: Height * 1,
-                          ),
-                          TextFormField(
-                            controller: _cardnoController,
-                            keyboardType: TextInputType.number,
-                            maxLength: 16,
-                            validator: (value) {
-                              if (value.toString().isEmpty) {
-                                return '*required';
-                              }
-                              return null;
-                            },
-                            decoration: const InputDecoration(
-                              contentPadding: EdgeInsets.symmetric(
-                                  vertical: 12.5, horizontal: 10.0),
-                              labelText: 'Card Number',
-                              hintText:
-                                  'Enter 16-digits Debit/Credit card number',
-                              hintStyle: TextStyle(
-                                color: Color.fromRGBO(20, 14, 37, 0.6),
-                                fontSize: 12,
-                              ),
+                            SizedBox(
+                              height: Height * 1,
                             ),
-                          ),
-                          SizedBox(
-                            height: Height * 1,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              SizedBox(
-                                width:
-                                    MediaQuery.of(context).size.width * 0.025,
-                              ),
-                              Flexible(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text("Expiry Date"),
-                                    Row(
-                                      children: [
-                                        Flexible(
-                                          child: TextFormField(
-                                            controller: _monthController,
-                                            keyboardType: TextInputType.number,
-                                            maxLength: 2,
-                                            validator: (value) {
-                                              if (value.toString().isEmpty) {
-                                                return '*';
-                                              }
-                                              return null;
-                                            },
-                                            decoration: const InputDecoration(
-                                              contentPadding:
-                                                  EdgeInsets.symmetric(
-                                                      vertical: 12.5,
-                                                      horizontal: 10.0),
-                                              hintText: 'MM',
-                                              hintStyle: TextStyle(
-                                                color: Color.fromRGBO(
-                                                    20, 14, 37, 0.6),
-                                                fontSize: 12,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        const Text(
-                                          '/',
-                                          style: TextStyle(fontSize: 25),
-                                        ),
-                                        Flexible(
-                                          child: TextFormField(
-                                            controller: _yearController,
-                                            maxLength: 2,
-                                            keyboardType: TextInputType.number,
-                                            validator: (value) {
-                                              if (value.toString().isEmpty) {
-                                                return '*';
-                                              }
-                                              return null;
-                                            },
-                                            decoration: const InputDecoration(
-                                              contentPadding:
-                                                  EdgeInsets.symmetric(
-                                                      vertical: 12.5,
-                                                      horizontal: 10.0),
-                                              hintText: 'YY',
-                                              hintStyle: TextStyle(
-                                                color: Color.fromRGBO(
-                                                    20, 14, 37, 0.6),
-                                                fontSize: 12,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
+                            TextFormField(
+                              controller: _nameController,
+                              validator: (value) {
+                                if (value.toString().isEmpty) {
+                                  return '*required';
+                                }
+                                return null;
+                              },
+                              decoration: const InputDecoration(
+                                contentPadding: EdgeInsets.symmetric(
+                                    vertical: 12.5, horizontal: 10.0),
+                                labelText: 'Name',
+                                hintText: 'Enter name mention on the card',
+                                hintStyle: TextStyle(
+                                  color: Color.fromRGBO(20, 14, 37, 0.6),
+                                  fontSize: 12,
                                 ),
                               ),
-                              SizedBox(
-                                width: MediaQuery.of(context).size.width * 0.1,
+                            ),
+                            SizedBox(
+                              height: Height * 1,
+                            ),
+                            TextFormField(
+                              controller: _cardnoController,
+                              keyboardType: TextInputType.number,
+                              maxLength: 16,
+                              validator: (value) {
+                                if (value.toString().isEmpty) {
+                                  return '*required';
+                                }
+                                return null;
+                              },
+                              decoration: const InputDecoration(
+                                contentPadding: EdgeInsets.symmetric(
+                                    vertical: 12.5, horizontal: 10.0),
+                                labelText: 'Card Number',
+                                hintText:
+                                    'Enter 16-digits Debit/Credit card number',
+                                hintStyle: TextStyle(
+                                  color: Color.fromRGBO(20, 14, 37, 0.6),
+                                  fontSize: 12,
+                                ),
                               ),
-                              Flexible(
-                                child: TextFormField(
-                                  controller: _cvvController,
-                                  keyboardType: TextInputType.number,
-                                  validator: (value) {
-                                    if (value.toString().isEmpty) {
-                                      return '*required';
-                                    }
-                                    return null;
-                                  },
-                                  obscureText: true,
-                                  decoration: const InputDecoration(
-                                    contentPadding: EdgeInsets.symmetric(
-                                        vertical: 12.5, horizontal: 10.0),
-                                    labelText: 'CVV',
+                            ),
+                            SizedBox(
+                              height: Height * 1,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                SizedBox(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.025,
+                                ),
+                                Flexible(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text("Expiry Date"),
+                                      Row(
+                                        children: [
+                                          Flexible(
+                                            child: TextFormField(
+                                              controller: _monthController,
+                                              keyboardType:
+                                                  TextInputType.number,
+                                              maxLength: 2,
+                                              validator: (value) {
+                                                if (value.toString().isEmpty) {
+                                                  return '*';
+                                                }
+                                                return null;
+                                              },
+                                              decoration: const InputDecoration(
+                                                contentPadding:
+                                                    EdgeInsets.symmetric(
+                                                        vertical: 12.5,
+                                                        horizontal: 10.0),
+                                                hintText: 'MM',
+                                                hintStyle: TextStyle(
+                                                  color: Color.fromRGBO(
+                                                      20, 14, 37, 0.6),
+                                                  fontSize: 12,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          const Text(
+                                            '/',
+                                            style: TextStyle(fontSize: 25),
+                                          ),
+                                          Flexible(
+                                            child: TextFormField(
+                                              controller: _yearController,
+                                              maxLength: 2,
+                                              keyboardType:
+                                                  TextInputType.number,
+                                              validator: (value) {
+                                                if (value.toString().isEmpty) {
+                                                  return '*';
+                                                }
+                                                return null;
+                                              },
+                                              decoration: const InputDecoration(
+                                                contentPadding:
+                                                    EdgeInsets.symmetric(
+                                                        vertical: 12.5,
+                                                        horizontal: 10.0),
+                                                hintText: 'YY',
+                                                hintStyle: TextStyle(
+                                                  color: Color.fromRGBO(
+                                                      20, 14, 37, 0.6),
+                                                  fontSize: 12,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
                                   ),
                                 ),
-                              ),
-                              SizedBox(
-                                width: MediaQuery.of(context).size.width * 0.05,
-                              ),
-                            ],
-                          ),
-                        ],
+                                SizedBox(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.1,
+                                ),
+                                Flexible(
+                                  child: TextFormField(
+                                    controller: _cvvController,
+                                    keyboardType: TextInputType.number,
+                                    validator: (value) {
+                                      if (value.toString().isEmpty) {
+                                        return '*required';
+                                      }
+                                      return null;
+                                    },
+                                    obscureText: true,
+                                    decoration: const InputDecoration(
+                                      contentPadding: EdgeInsets.symmetric(
+                                          vertical: 12.5, horizontal: 10.0),
+                                      labelText: 'CVV',
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.05,
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -288,6 +296,7 @@ class _PaymentInfoScreenState extends State<PaymentInfoScreen> {
                   InkWell(
                     onTap: _isloading ? null : _submitData,
                     child: Container(
+                      width: MediaQuery.of(context).size.width * 0.5,
                       alignment: Alignment.center,
                       height: 48,
                       decoration: BoxDecoration(
@@ -300,7 +309,8 @@ class _PaymentInfoScreenState extends State<PaymentInfoScreen> {
                             )
                           : Text(
                               'Confirm',
-                              style: HeadStyle.copyWith(fontSize: 16),
+                              style: HeadStyle.copyWith(
+                                  fontSize: 16, color: Colors.white),
                             ),
                     ),
                   )

@@ -51,18 +51,25 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
           await payment.addCustomer(temp);
           payment.addSubscription(prodkey: productkey).then((value) async {
             if (Provider.of<Payment>(context, listen: false).tempSubs != null) {
-              await payment.uploaddata();
-              // print(123);
-              // AwesomeDialog(
-              //   padding: EdgeInsets.zero,
-              //   context: context,
-              //   showCloseIcon: false,
-              //   dialogType: DialogType.success,
-              //   headerAnimationLoop: false,
-              //   transitionAnimationDuration: const Duration(milliseconds: 400),
-              //   title: 'Sufyan',
-              //   desc: 'Your subscription has been purchased',
-              // ).show();
+              payment.uploaddata().then((value) {
+                setState(() {
+                  _isloading = false;
+                });
+                print(123);
+                AwesomeDialog(
+                  width: MediaQuery.of(context).size.width * 0.2,
+                  padding: EdgeInsets.zero,
+                  context: context,
+                  showCloseIcon: false,
+                  dialogType: DialogType.success,
+                  headerAnimationLoop: false,
+                  transitionAnimationDuration:
+                      const Duration(milliseconds: 400),
+                  title: 'Success',
+                  desc: 'Your subscription has been purchased',
+                  btnOkOnPress: () {},
+                ).show();
+              });
             }
           });
         } catch (error) {
@@ -84,9 +91,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         }
       }
     }
-    setState(() {
-      _isloading = false;
-    });
   }
 
   bool isLoading = false;
@@ -180,11 +184,11 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                       ),
                                     ],
                                   ),
-                                  if (product.images!.isNotEmpty)
-                                    Container(
-                                      child:
-                                          Image.network(product.images!.first),
-                                    ),
+                                  // if (product.images!.isNotEmpty)
+                                  //   Container(
+                                  //     child:
+                                  //         Image.network(product.images!.first),
+                                  //   ),
                                 ],
                               ),
                             ),
@@ -389,7 +393,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                   )
                                 : Text(
                                     'Confirm',
-                                    style: HeadStyle.copyWith(fontSize: 16),
+                                    style: HeadStyle.copyWith(
+                                        fontSize: 16, color: Colors.white),
                                   ),
                           ),
                         )

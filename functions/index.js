@@ -24,7 +24,14 @@ exports.webhook = functions.https.onRequest((request, response) => {
 
   // Handle the event
   switch (event.type) {
-    case "checkout.session.completed": {
+    case "customer.subscription.created": {
+      const data =event.data.object;
+      console.log(data.amount);
+      response.send(data.status);
+      break;
+    }
+    //handle subscription update
+    case "customer.subscription.updated": {
       const data =event.data.object;
       console.log(data.amount);
       response.send(data.status);
